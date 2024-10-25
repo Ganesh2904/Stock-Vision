@@ -13,13 +13,11 @@ import NotFound from "./components/NotFound";
 
 function App() {
   const [theme, setTheme] = useState(() => {
-    // Check localStorage for the stored theme, default to 'light' if none found
     const storedTheme = localStorage.getItem("darkMode");
     return storedTheme === "true" ? "dark" : "light";
   });
 
   useEffect(() => {
-    // When theme changes, apply it to the document and save it in localStorage
     if (theme === "dark") {
       document.documentElement.classList.add("dark");
     } else {
@@ -32,38 +30,14 @@ function App() {
     <div className="min-h-screen flex flex-col">
       <themeContext.Provider value={{ theme, setTheme }}>
         <Header />
-        <div className="flex-grow px-4 md:px-8 lg:px-12 xl:px-16">
+        <div className="flex-grow mt-12  px-4 md:px-8 lg:px-12 xl:px-16">
           <Routes>
-            <Route
-              path="/"
-              element={
-                <Home/>
-              }
-            />
-            <Route
-              path="/companies"
-              element={
-                <Companies/>
-              }
-            />
-            <Route
-              path="/economy"
-              element={
-                <Economy/>
-              }
-            />
-            <Route
-              path="/news"
-              element={
-                <News/>
-              }
-            />
-            <Route
-              path="*"
-              element={
-                <NotFound/>
-              }
-            />
+            <Route path="/" element={<Home />} />
+            <Route path="/companies" element={<Companies />} />
+            <Route path="/economy" element={<Economy />} />
+            <Route path="/news" element={<News />} />
+            <Route path="/analysis" element={<Analysis />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
         <Footer />

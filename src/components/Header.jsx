@@ -33,7 +33,7 @@ export default function Header() {
   }
 
   return (
-    <header className="flex flex-col sm:flex-row bg-zinc-100 dark:bg-zinc-900 py-2 px-4 md:px-8 lg:px-12 xl:px-16">
+    <header className="fixed left-0 right-0 flex flex-col sm:flex-row bg-zinc-100 dark:bg-zinc-900 py-2 px-4 md:px-8 lg:px-12 xl:px-16 z-50">
       <div className="flex justify-between w-full items-center">
         <div className="flex gap-2 items-center">
           <img
