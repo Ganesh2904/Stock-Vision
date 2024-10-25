@@ -18,8 +18,10 @@ function Analysis() {
   const { data } = location.state || {};
   const [stocksData, setStocksData] = useState([]);
   const [minLowValue, setMinLowValue] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    setLoading(true);
     fetch(
       `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${
         data["1. symbol"]
@@ -27,6 +29,7 @@ function Analysis() {
     )
       .then((res) => res.json())
       .then((data) => {
+        setLoading(false);
         if (data["Information"]) alert("API ERROR: " + data["Information"]);
         if (data["Error Message"]) alert("API ERROR: " + data["Error Message"]);
         let finalData = [];
@@ -39,9 +42,14 @@ function Analysis() {
           unit["low"] = parseFloat(data["Time Series (Daily)"][key]["3. low"]);
           finalData.push(unit);
         }
+        finalData.reverse();
         setStocksData(finalData);
         const minLow = Math.min(...finalData.map((item) => item.low));
         setMinLowValue(minLow);
+      })
+      .catch((e) => {
+        setLoading(false);
+        alert(e);
       });
   }, []);
 
@@ -51,7 +59,7 @@ function Analysis() {
   };
 
   return (
-    <div>
+    <div className={`${loading ? "cursor-wait" : ""}`}>
       {data ? (
         <div className="py-4">
           <div className="flex gap-2 items-center">
@@ -97,8 +105,14 @@ function Analysis() {
                 dot={<CustomDot />}
               />
               <CartesianGrid stroke={theme == "dark" ? "#4b5563" : "#d1d5db"} />
-              <XAxis dataKey="date" stroke={theme == "dark" ? "#9ca3af" : "#4b5563"} />
-              <YAxis domain={[minLowValue, "dataMax"]} stroke={theme == "dark" ? "#9ca3af" : "#4b5563"} />
+              <XAxis
+                dataKey="date"
+                stroke={theme == "dark" ? "#9ca3af" : "#4b5563"}
+              />
+              <YAxis
+                domain={[minLowValue, "dataMax"]}
+                stroke={theme == "dark" ? "#9ca3af" : "#4b5563"}
+              />
               <Tooltip
                 contentStyle={
                   theme == "dark"

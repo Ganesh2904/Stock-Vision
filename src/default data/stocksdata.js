@@ -719,4 +719,5 @@ for (let key in data["Time Series (Daily)"]) {
   finalData.push(unit);
 }
 
+finalData.reverse();
 export default finalData;

@@ -1,4 +1,4 @@
-import React, { useState,useContext } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import themeContext from "../context/themecontext";
 
@@ -75,11 +75,13 @@ function Companies() {
   const [companyData, setCompanyData] = useState(initialData);
   const [input, setInput] = useState("");
   const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const {theme} = useContext(themeContext);
+  const { theme } = useContext(themeContext);
 
   function handleSearch(e) {
     e.preventDefault();
+    setLoading(true);
     fetch(
       `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${input}&apikey=${
         import.meta.env.VITE_API_KEY
@@ -87,6 +89,7 @@ function Companies() {
     )
       .then((v) => v.json())
       .then((data) => {
+        setLoading(false);
         setCompanyData(data["bestMatches"] ? data["bestMatches"] : []);
         if (data["Error Message"]) {
           setError(data["Error Message"]);
@@ -96,7 +99,10 @@ function Companies() {
           setError(false);
         }
       })
-      .catch((e) => alert(e));
+      .catch((e) => {
+        alert(e);
+        setLoading(false);
+      });
   }
 
   function getCompanyAnalysis(company) {
@@ -104,7 +110,7 @@ function Companies() {
   }
 
   return (
-    <div>
+    <div className={`${loading ? "cursor-wait" : ""}`}>
       <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 py-4">
         <h1 className="text-2xl text-green-600 dark:text-green-400">
           Companies
@@ -125,12 +131,12 @@ function Companies() {
             className="w-8 h-8 pl-1 bg-zinc-200 hover:bg-zinc-300 dark:bg-zinc-700 dark:hover:bg-zinc-600 rounded-full"
           >
             <img
-                src={
-                  theme === "dark"
-                    ? "src/images/search_light.svg"
-                    : "src/images/search_dark.svg"
-                }
-              />
+              src={
+                theme === "dark"
+                  ? "src/images/search_light.svg"
+                  : "src/images/search_dark.svg"
+              }
+            />
           </button>
         </form>
       </div>
@@ -145,8 +151,12 @@ function Companies() {
             <h2 className="text-wrap font-medium">{company["2. name"]}</h2>
             <p className="font-light">{company["4. region"]}</p>
             <div className="flex gap-3">
-              <p className="bg-blue-100 dark:bg-blue-800/30 px-2 rounded">Ticker: {company["1. symbol"]}</p>
-              <p className="bg-green-100 dark:bg-green-800/40 px-2 rounded">Currency: {company["8. currency"]}</p>
+              <p className="bg-blue-100 dark:bg-blue-800/30 px-2 rounded">
+                Ticker: {company["1. symbol"]}
+              </p>
+              <p className="bg-green-100 dark:bg-green-800/40 px-2 rounded">
+                Currency: {company["8. currency"]}
+              </p>
             </div>
           </div>
         ))}
