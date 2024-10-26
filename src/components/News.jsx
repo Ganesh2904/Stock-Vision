@@ -6,17 +6,21 @@ function News() {
   const [data, setData] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [disableNext,setDisableNext] = useState(true);
+
   useEffect(() => {
     setLoading(true);
     fetch(
-      `https://newsapi.org/v2/everything?q=stocks&apiKey=${
+      `https://newsapi.org/v2/everything?q=stocks&language=en&pageSize=10&page=${page}&apiKey=${
         import.meta.env.VITE_NEWS_API_KEY
       }`
     )
       .then((res) => res.json())
       .then((data) => {
         setLoading(false);
-        if (data["status"] !== "ok") alert("news api error");
+        if (data["status"] !== "ok") alert("api error: " + data["message"]);
+        console.log(data);
         setData(data);
       })
       .catch((e) => {
@@ -25,17 +29,44 @@ function News() {
       });
   }, []);
 
-  function search(e) {
-    e.preventDefault();
+  useEffect(() => {
     fetch(
-      `https://newsapi.org/v2/everything?q=${input}&apiKey=${
+      `https://newsapi.org/v2/everything?q=${
+        input || "stocks"
+      }&language=en&pageSize=10&page=${page}&apiKey=${
         import.meta.env.VITE_NEWS_API_KEY
       }`
     )
       .then((res) => res.json())
       .then((data) => {
         setData(data);
-        if (data["status"] !== "ok") alert("news api error");
+        if (data["status"] !== "ok") alert("API Error: "+data["message"]);
+      })
+      .catch((e) => {
+        setLoading(false);
+        alert("API Error");
+      });
+  }, [page]);
+
+  useEffect(()=>{
+    if(data["articles"]){
+      if(data["articles"].length<10) setDisableNext(true);
+      else setDisableNext(false);
+    } else setDisableNext(true);
+  },[page,data])
+
+  function search(e) {
+    setPage(1);
+    e.preventDefault();
+    fetch(
+      `https://newsapi.org/v2/everything?q=${input}&language=en&pageSize=10&page=${page}&apiKey=${
+        import.meta.env.VITE_NEWS_API_KEY
+      }`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        setData(data);
+        if (data["status"] !== "ok") alert("API Error: "+data["message"]);
       })
       .catch((e) => {
         setLoading(false);
@@ -73,7 +104,6 @@ function News() {
         {data.articles && (
           <section className="grid gap-4 md:grid-cols-2 mb-4">
             {data.articles.map((a, i) => {
-              console.log(a);
               return (
                 <article
                   key={i}
@@ -119,6 +149,49 @@ function News() {
           </section>
         )}
         {data.articles && data.articles.length === 0 && <p>No results found</p>}
+      </div>
+      <div className="flex items-center justify-center gap-3 mb-4">
+        <button
+          disabled={page <= 1}
+          onClick={() => setPage(page - 1)}
+          className="inline-flex disabled:cursor-not-allowed disabled:bg-white dark:disabled:bg-zinc-800 size-8 items-center justify-center rounded border-2 border-zinc-300 disabled:border-none  bg-zinc-100 text-zinc-900 rtl:rotate-180 dark:border-zinc-800 dark:bg-zinc-900 dark:text-white"
+        >
+          <span className="sr-only">Prev Page</span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="size-3"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fillRule="evenodd"
+              d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </button>
+
+        <p className="text-xs text-zinc-900 dark:text-white">{page}</p>
+
+        <button
+          disabled={disableNext}
+          onClick={() => setPage(page + 1)}
+          className="inline-flex  disabled:cursor-not-allowed disabled:bg-white dark:disabled:bg-zinc-800 size-8 items-center justify-center rounded border-2 border-zinc-300 disabled:border-none  bg-zinc-100 text-zinc-900 rtl:rotate-180 dark:border-zinc-800 dark:bg-zinc-900 dark:text-white"
+        >
+          <span className="sr-only">Next Page</span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="size-3"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fillRule="evenodd"
+              d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </button>
       </div>
     </div>
   );
