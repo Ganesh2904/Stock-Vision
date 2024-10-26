@@ -73,6 +73,7 @@ let initialData = [
 
 function Companies() {
   const [companyData, setCompanyData] = useState(initialData);
+  const [defaultData,setDefaultData] = useState(initialData);
   const [input, setInput] = useState("");
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -91,6 +92,7 @@ function Companies() {
       .then((data) => {
         setLoading(false);
         setCompanyData(data["bestMatches"] ? data["bestMatches"] : []);
+        setDefaultData(data["bestMatches"] ? data["bestMatches"] : []);
         if (data["Error Message"]) {
           setError(data["Error Message"]);
         } else if (data["Information"]) {
@@ -108,6 +110,30 @@ function Companies() {
   function getCompanyAnalysis(company) {
     navigate("/analysis", { state: { data: company } });
   }
+
+  function sortby(filter) {
+    switch (filter) {
+      case "name":
+        setCompanyData(
+          [...companyData].sort((a, b) => a["2. name"].localeCompare(b["2. name"]))
+        );
+        break;
+      case "ticker":
+        setCompanyData(
+          [...companyData].sort((a, b) => a["1. symbol"].localeCompare(b["1. symbol"]))
+        );
+        break;
+      case "region":
+        setCompanyData(
+          [...companyData].sort((a, b) => a["4. region"].localeCompare(b["4. region"]))
+        );
+        break;
+      default:
+        setCompanyData(defaultData);
+        break;
+    }
+  }
+  
 
   return (
     <div className={`${loading ? "cursor-wait" : ""}`}>
@@ -139,6 +165,25 @@ function Companies() {
             />
           </button>
         </form>
+      </div>
+      <div className="flex gap-2 items-center pb-4">
+        <label
+          htmlFor="HeadlineAct"
+          className="block font-medium text-gray-900 dark:text-zinc-100"
+        >
+          sort by:  
+        </label>
+        <select
+          name="HeadlineAct"
+          id="HeadlineAct"
+          className="mt-1.5 w-36 rounded-lg border border-gray-400  dark:bg-zinc-800 text-zinc-800 dark:text-zinc-100 sm:text-sm"
+          onChange={(e)=>sortby(e.target.value)}
+        >
+          <option value="default">default</option>
+          <option value="name">company name</option>
+          <option value="ticker">ticker</option>
+          <option value="region">country/region</option>
+        </select>
       </div>
       <div className="grid gap-2 lg:gap-4 pb-4 sm:grid-cols-2 xl:grid-cols-3">
         {companyData.map((company, i) => (
