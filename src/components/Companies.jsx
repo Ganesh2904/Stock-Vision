@@ -1,79 +1,11 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import themeContext from "../context/themecontext";
-
-let initialData = [
-  {
-    "1. symbol": "TCS.BSE",
-    "2. name": "Tata Consultancy Services Limited",
-    "3. type": "Equity",
-    "4. region": "India/Bombay",
-    "5. marketOpen": "09:15",
-    "6. marketClose": "15:30",
-    "7. timezone": "UTC+5.5",
-    "8. currency": "INR",
-    "9. matchScore": "0.6667",
-  },
-  {
-    "1. symbol": "TSCO.LON",
-    "2. name": "Tesco PLC",
-    "3. type": "Equity",
-    "4. region": "United Kingdom",
-    "5. marketOpen": "08:00",
-    "6. marketClose": "16:30",
-    "7. timezone": "UTC+01",
-    "8. currency": "GBX",
-    "9. matchScore": "0.7273",
-  },
-  {
-    "1. symbol": "AAPL",
-    "2. name": "Apple Inc",
-    "3. type": "Equity",
-    "4. region": "United States",
-    "5. marketOpen": "09:30",
-    "6. marketClose": "16:00",
-    "7. timezone": "UTC-04",
-    "8. currency": "USD",
-    "9. matchScore": "0.7143",
-  },
-  {
-    "1. symbol": "ITCI",
-    "2. name": "Intra-Cellular Therapies Inc",
-    "3. type": "Equity",
-    "4. region": "United States",
-    "5. marketOpen": "09:30",
-    "6. marketClose": "16:00",
-    "7. timezone": "UTC-04",
-    "8. currency": "USD",
-    "9. matchScore": "0.8571",
-  },
-  {
-    "1. symbol": "ITCJ",
-    "2. name": "Infinite Tech Corp",
-    "3. type": "Equity",
-    "4. region": "United States",
-    "5. marketOpen": "09:30",
-    "6. marketClose": "16:00",
-    "7. timezone": "UTC-04",
-    "8. currency": "USD",
-    "9. matchScore": "0.8571",
-  },
-  {
-    "1. symbol": "0RIH.LON",
-    "2. name": "Alphabet Inc Class A",
-    "3. type": "Equity",
-    "4. region": "United Kingdom",
-    "5. marketOpen": "08:00",
-    "6. marketClose": "16:30",
-    "7. timezone": "UTC+01",
-    "8. currency": "USD",
-    "9. matchScore": "0.5714",
-  },
-];
+import initialData from "../default data/initialcompanydata";
 
 function Companies() {
   const [companyData, setCompanyData] = useState(initialData);
-  const [defaultData,setDefaultData] = useState(initialData);
+  const [defaultData, setDefaultData] = useState(initialData);
   const [input, setInput] = useState("");
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -115,17 +47,23 @@ function Companies() {
     switch (filter) {
       case "name":
         setCompanyData(
-          [...companyData].sort((a, b) => a["2. name"].localeCompare(b["2. name"]))
+          [...companyData].sort((a, b) =>
+            a["2. name"].localeCompare(b["2. name"])
+          )
         );
         break;
       case "ticker":
         setCompanyData(
-          [...companyData].sort((a, b) => a["1. symbol"].localeCompare(b["1. symbol"]))
+          [...companyData].sort((a, b) =>
+            a["1. symbol"].localeCompare(b["1. symbol"])
+          )
         );
         break;
       case "region":
         setCompanyData(
-          [...companyData].sort((a, b) => a["4. region"].localeCompare(b["4. region"]))
+          [...companyData].sort((a, b) =>
+            a["4. region"].localeCompare(b["4. region"])
+          )
         );
         break;
       default:
@@ -133,7 +71,6 @@ function Companies() {
         break;
     }
   }
-  
 
   return (
     <div className={`${loading ? "cursor-wait" : ""}`}>
@@ -171,13 +108,13 @@ function Companies() {
           htmlFor="HeadlineAct"
           className="block font-medium text-gray-900 dark:text-zinc-100"
         >
-          sort by:  
+          sort by:
         </label>
         <select
           name="HeadlineAct"
           id="HeadlineAct"
           className="mt-1.5 w-36 rounded-lg border border-gray-400  dark:bg-zinc-800 text-zinc-800 dark:text-zinc-100 sm:text-sm"
-          onChange={(e)=>sortby(e.target.value)}
+          onChange={(e) => sortby(e.target.value)}
         >
           <option value="default">default</option>
           <option value="name">company name</option>

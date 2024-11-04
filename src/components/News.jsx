@@ -20,7 +20,6 @@ function News() {
       .then((data) => {
         setLoading(false);
         if (data["status"] !== "ok") alert("api error: " + data["message"]);
-        console.log(data);
         setData(data);
       })
       .catch((e) => {
