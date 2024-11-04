@@ -4,10 +4,11 @@ import themeContext from "../context/themecontext";
 function News() {
   const { theme } = useContext(themeContext);
   const [data, setData] = useState([]);
+  const [defaultData, setDefaultData] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
-  const [disableNext,setDisableNext] = useState(true);
+  const [disableNext, setDisableNext] = useState(true);
 
   useEffect(() => {
     setLoading(true);
@@ -21,6 +22,7 @@ function News() {
         setLoading(false);
         if (data["status"] !== "ok") alert("api error: " + data["message"]);
         setData(data);
+        setDefaultData(data);
       })
       .catch((e) => {
         setLoading(false);
@@ -39,7 +41,8 @@ function News() {
       .then((res) => res.json())
       .then((data) => {
         setData(data);
-        if (data["status"] !== "ok") alert("API Error: "+data["message"]);
+        setDefaultData(data);
+        if (data["status"] !== "ok") alert("API Error: " + data["message"]);
       })
       .catch((e) => {
         setLoading(false);
@@ -47,12 +50,12 @@ function News() {
       });
   }, [page]);
 
-  useEffect(()=>{
-    if(data["articles"]){
-      if(data["articles"].length<10) setDisableNext(true);
+  useEffect(() => {
+    if (data["articles"]) {
+      if (data["articles"].length < 10) setDisableNext(true);
       else setDisableNext(false);
     } else setDisableNext(true);
-  },[page,data])
+  }, [page, data]);
 
   function search(e) {
     setPage(1);
@@ -65,12 +68,36 @@ function News() {
       .then((res) => res.json())
       .then((data) => {
         setData(data);
-        if (data["status"] !== "ok") alert("API Error: "+data["message"]);
+        setDefaultData(data);
+        if (data["status"] !== "ok") alert("API Error: " + data["message"]);
       })
       .catch((e) => {
         setLoading(false);
         alert("api error");
       });
+  }
+
+  function sortby(filter) {
+    let sortedArticles = [...data.articles];
+
+    switch (filter) {
+      case "title":
+        sortedArticles.sort((a, b) => a.title.localeCompare(b.title));
+        break;
+      case "author":
+        sortedArticles.sort((a, b) => a.author.localeCompare(b.author));
+        break;
+      case "time":
+        sortedArticles.sort(
+          (a, b) => new Date(a.publishedAt) - new Date(b.publishedAt)
+        );
+        break;
+      default:
+        sortedArticles = [...defaultData.articles];
+        break;
+    }
+
+    setData({ ...data, articles: sortedArticles });
   }
 
   return (
@@ -98,6 +125,25 @@ function News() {
             />
           </button>
         </form>
+      </div>
+      <div className="flex gap-2 items-center pb-4">
+        <label
+          htmlFor="HeadlineAct"
+          className="block font-medium text-gray-900 dark:text-zinc-100"
+        >
+          sort by:
+        </label>
+        <select
+          name="HeadlineAct"
+          id="HeadlineAct"
+          className="mt-1.5 w-36 rounded-lg border border-gray-400  dark:bg-zinc-800 text-zinc-800 dark:text-zinc-100 sm:text-sm"
+          onChange={(e) => sortby(e.target.value)}
+        >
+          <option value="default">default</option>
+          <option value="title">title</option>
+          <option value="author">author</option>
+          <option value="time">date/time</option>
+        </select>
       </div>
       <div>
         {data.articles && (
