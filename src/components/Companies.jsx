@@ -96,8 +96,8 @@ function Companies() {
             <img
               src={
                 theme === "dark"
-                  ? "src/images/search_light.svg"
-                  : "src/images/search_dark.svg"
+                  ? "/images/search_light.svg"
+                  : "/images/search_dark.svg"
               }
             />
           </button>

@@ -70,8 +70,8 @@ function Analysis() {
               <img
                 src={
                   theme === "dark"
-                    ? "src/images/arrow_light.svg"
-                    : "src/images/arrow_dark.svg"
+                    ? "/images/arrow_light.svg"
+                    : "/images/arrow_dark.svg"
                 }
                 style={{ opacity: "85%" }}
               />

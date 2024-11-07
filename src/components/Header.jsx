@@ -38,7 +38,7 @@ export default function Header() {
         <div className="flex gap-2 items-center">
           <img
             src={
-              theme === "dark" ? "src/images/logo2.png" : "src/images/logo.png"
+              theme === "dark" ? "/images/logo2.png" : "/images/logo.png"
             }
             className="h-8 w-auto"
             alt="Logo"
@@ -55,8 +55,8 @@ export default function Header() {
             <img
               src={
                 theme === "dark"
-                  ? "src/images/dark_mode.svg"
-                  : "src/images/light_mode.svg"
+                  ? "/images/dark_mode.svg"
+                  : "/images/light_mode.svg"
               }
               alt="theme"
             />
@@ -70,11 +70,11 @@ export default function Header() {
               src={
                 openMenu
                   ? isDarkMode
-                    ? "src/images/close_light.svg"
-                    : "src/images/close_dark.svg"
+                    ? "/images/close_light.svg"
+                    : "/images/close_dark.svg"
                   : isDarkMode
-                  ? "src/images/menu_light.svg"
-                  : "src/images/menu_dark.svg"
+                  ? "/images/menu_light.svg"
+                  : "/images/menu_dark.svg"
               }
               alt="menu"
             />

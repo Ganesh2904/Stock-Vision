@@ -14,10 +14,10 @@ function Footer() {
           </p>
           <div class="flex justify-center space-x-4 mt-2">
             <a href="https://github.com/Ganesh2904" target="_blank"  className="hover:shadow-lg hover:shadow-cyan-500 rounded-full">
-              <img src={theme=="dark"?"src/images/github (1).png":"src/images/github.png"} />
+              <img src={theme=="dark"?"/images/github (1).png":"/images/github.png"} />
             </a>
             <a href="https://www.linkedin.com/in/ganesh-mankar-98bab6253/" target="_blank"  class="hover:underline" className="hover:shadow-lg hover:shadow-cyan-500 rounded-full">
-              <img src={theme=="dark"?"src/images/linkedin (1).png":"src/images/linkedin.png"} />
+              <img src={theme=="dark"?"/images/linkedin (1).png":"/images/linkedin.png"} />
             </a>
           </div>
         </div>
